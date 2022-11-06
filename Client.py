@@ -1,14 +1,31 @@
 import socket
 import sys
+import paramiko
 import PySimpleGUI as sg
 
 
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
+#SSH sending information
+host = "127.0.0.1"   #server host
+username = "jason"     #username
+password = "xxxx"      #password
+port = "22"            #port
+
 #test button for pressing
 def func(message='Default message'):
     print(message)
+
+#function for pairing audio file and exhibit upon button press
+def pair(audFile, exh):
+    #client = paramiko.client.SSHClient()
+    #client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    #client.connect(host, username=username, password=password,port=port)
+    #_stdin, _stdout, _stderr = client.exec_command('python hello.py')
+    #print(_stdout.read().decode())
+    #client.close()
+    print("Attempted to pair " + audFile + " " + exh)
 
 #creating socket
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -39,14 +56,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         #set layout
         layout = [
-            [sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0, 0), graph_top_right=(400, 400), background_color='red', enable_events=True, key='graph')],
-            [sg.Text("Hello from PySimpleGUI")], [sg.Button('1', key=lambda: func('Button 1 pressed'))],
+            [sg.Graph(canvas_size=(1000, 500), graph_bottom_left=(0, 0), graph_top_right=(400, 400), background_color='grey', enable_events=True, key='graph')],
+            [sg.Text("Hello from PySimpleGUI")], 
             [sg.Combo(audioFiles, size = (10,1), key='Audio')],
-            [sg.Combo(exhibits, size = (10,1), key='Exhibits')]
+            [sg.Combo(exhibits, size = (10,1), key='Exhibits')],
+            [sg.Button('Pair')]
         ]
 
         #create PySimpleGUI window
-        window = sg.Window("Demo", layout,size=(1250, 750), resizable=True, finalize=True)
+        window = sg.Window("Demo", layout,size=(1150, 700), resizable=True, finalize=True)
 
 
         #create graph
@@ -62,6 +80,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # can also use keys and element = window[key] <-- possibly better approach
         while True:
             event, values = window.read(timeout=10)
+            if event == 'Pair':
+                a = values['Audio']
+                e = values['Exhibits']
+                pair(a,e)
             if callable(event):
                 event()
             try:
