@@ -50,13 +50,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         lists = data_decoded.split("^")
         pos1 = lists[0].split()
         pos2 = lists[1].split()
-        pos3 = lists[2].split()
         for p1 in pos1:
             audioFiles.append(p1)
         for p2 in pos2:
             exhibits.append(p2)
-        for p3 in pos3:
-            locations.append(p3)
 
         #set layout
         layout = [
@@ -82,13 +79,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         #    point = graph.draw_point((25, 25), 10, color='green')
         #    peopleList.append(point)
         # can also use keys and element = window[key] <-- possibly better approach
-        print(locations[0])
-        for i in range(len(exhibits)):
-            positions = locations[i].split()
-            x = int(positions[0].split('.')[0])
-            y = int(positions[1].split('.')[0])
-            graph.DrawText(exhibits[i], (x, y - 10))
-            graph.draw_point((x, y), 10, color='red')
+
+
+        #    graph.DrawText(exhibits[i], (x, y - 10))
+        #    graph.draw_point((x, y), 10, color='red')
 
         while True:
             event, values = window.read(timeout=10)
