@@ -19,6 +19,8 @@ def func(message='Default message'):
 
 #function for pairing audio file and exhibit upon button press
 def pair(audFile, exh):
+    if audFile == "" or exh == "":
+        return
     #client = paramiko.client.SSHClient()
     #client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     #client.connect(host, username=username, password=password,port=port)
@@ -43,11 +45,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         #recieve, decode and add audio files and exhibits from server into list
         data = conn.recv(1024)
         data_decoded = data.decode('utf-8')
-        data_decoded = data_decoded.replace('[', '')
-        data_decoded = data_decoded.replace(']', '')
-        data_decoded = data_decoded.replace(',', '')
-        data_decoded = data_decoded.replace('\'', '')
-        lists = data_decoded.split("^")
+        decodedSplit = data_decoded.split("|")
+        dd = decodedSplit[0].replace('[', '')
+        dd = dd.replace(']', '')
+        dd = dd.replace(',', '')
+        dd = dd.replace('\'', '')
+        lists = dd.split("^")
         pos1 = lists[0].split()
         pos2 = lists[1].split()
         for p1 in pos1:
@@ -55,12 +58,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         for p2 in pos2:
             exhibits.append(p2)
 
+        dd = decodedSplit[1].replace('[', '')
+        dd = dd.replace(']', '')
+        posits = dd.split("^")
+        print(posits)
+
+
         #set layout
         layout = [
             [sg.Graph(canvas_size=(1000, 500), graph_bottom_left=(0, 0), graph_top_right=(400, 400), background_color='grey', enable_events=True, key='graph')],
-            [sg.Text("Hello from PySimpleGUI")], 
-            [sg.Combo(audioFiles, size = (10,1), key='Audio')],
-            [sg.Combo(exhibits, size = (10,1), key='Exhibits')],
+            [sg.Text("Select Audio File and Exhibit to Pair")], 
+            [sg.Combo(audioFiles, size = (10,1), key='Audio', readonly=True)],
+            [sg.Combo(exhibits, size = (10,1), key='Exhibits', readonly=True)],
             [sg.Button('Pair')]
         ]
 
@@ -79,6 +88,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         #    point = graph.draw_point((25, 25), 10, color='green')
         #    peopleList.append(point)
         # can also use keys and element = window[key] <-- possibly better approach
+        
+        for i in range(len(exhibits)):
+            temp = posits[i]
+            temp1 = temp.split()
+            x = int(temp1[0].split('.')[0])
+            y = int(temp1[1].split('.')[0])
+            graph.DrawText(exhibits[i], (x, y - 10))
+            graph.draw_point((x, y), 3, color='red')
+            i += 1
+
 
 
         #    graph.DrawText(exhibits[i], (x, y - 10))
