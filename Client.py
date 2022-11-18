@@ -125,8 +125,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print(str(data_decoded))
                     pos = data_decoded.split()
                     #casting to int
-                    x = int(pos[0].split('.')[0])
-                    y = int(pos[1].split('.')[0])
+                    x = float(pos[0])
+                    y = float(pos[1])
                     #move point
                     graph.relocate_figure(point, x, y)
                     
