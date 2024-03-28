@@ -13,6 +13,9 @@ username = "jason"     #username
 password = "xxxx"      #password
 port = "22"            #port
 
+HOST = "192.168.56.1"
+host = "192.168.56.1"
+
 #test button for pressing
 def func(message='Default message'):
     print(message)
